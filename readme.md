@@ -1,4 +1,4 @@
-# UniTella
+# TeesCurrencyConverter
 
 # Setup & Resources
 - Clone repository : git@github.com:Bablobeto/tees_currency_converter.git
