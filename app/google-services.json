@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "223635751017",
+    "project_id": "teescurrencyconverter",
+    "storage_bucket": "teescurrencyconverter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223635751017:android:ec70402a53264dd71622f8",
+        "android_client_info": {
+          "package_name": "com.example.teescurrencyconverter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpLmWG1gAk2hRy8pyRopTWstNArCaNTHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
+    id("com.google.gms.google-services")
+
+    // Firebase
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -50,6 +56,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -66,4 +74,60 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Extra implementations
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+    implementation(libs.androidx.room.common)
+    implementation(libs.engage.core)
+    implementation(libs.filament.android)
+    implementation(libs.play.services.location)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.crashlytics.buildtools)
+
+
+    // Firebase
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt (libs.hilt.android.compiler)
+    implementation (libs.kotlinx.coroutines.android)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Moshi
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.converter.moshi)
+
+    // Room components
+    implementation (libs.androidx.room.runtime)
+//    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation (libs.androidx.room.ktx)
+    androidTestImplementation (libs.androidx.room.testing)
+
+    // Lifecycle components
+    implementation (libs.androidx.lifecycle.extensions)
+    implementation (libs.androidx.lifecycle.common.java8)
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+
+    // Kotlin components
+    implementation (libs.kotlin.stdlib.jdk8)
+    api (libs.kotlinx.coroutines.core)
+    api (libs.kotlinx.coroutines.android)
+    implementation (libs.androidx.runtime.livedata)
+
+//    implementation (libs.converter.gson)
+//    implementation(libs.onetapcompose)
+//    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+//    implementation("com.github.stevdza-san:OneTapCompose:1.0.12")
+
+    // Google firebase
+    implementation (libs.play.services.auth)
+    implementation (libs.coil.compose)
+}
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
