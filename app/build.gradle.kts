@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-
     id("com.google.gms.google-services")
 
     // Firebase
@@ -103,7 +102,7 @@ dependencies {
 
     // Room components
     implementation (libs.androidx.room.runtime)
-//    kapt ("androidx.room:room-compiler:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
     implementation (libs.androidx.room.ktx)
     androidTestImplementation (libs.androidx.room.testing)
 
@@ -125,6 +124,7 @@ dependencies {
     implementation (libs.play.services.auth)
     implementation (libs.coil.compose)
 }
+
 // Allow references to generated code
 kapt {
     correctErrorTypes = true
