@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TeesCurrencyConverter</string>
+    <string name="google_logo">Sign in with Google</string>
+    <string name="success_activity_image">Registration successful</string>
 </resources>

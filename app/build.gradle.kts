@@ -118,10 +118,8 @@ dependencies {
     api (libs.kotlinx.coroutines.android)
     implementation (libs.androidx.runtime.livedata)
 
-//    implementation (libs.converter.gson)
+    implementation (libs.converter.gson)
 //    implementation(libs.onetapcompose)
-//    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-//    implementation("com.github.stevdza-san:OneTapCompose:1.0.12")
 
     // Google firebase
     implementation (libs.play.services.auth)
