@@ -4,44 +4,34 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.teescurrencyconverter.room.viewmodel.RecordsViewModel
+import com.example.teescurrencyconverter.ui.app.navigations.navgraphs.SetupAuthGraph
 import com.example.teescurrencyconverter.ui.theme.TeesCurrencyConverterTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    // Implementation for navigation pages
+    private lateinit var navController: NavHostController
+    private lateinit var mItemViewModel: RecordsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        installSplashScreen().setKeepOnScreenCondition() { false }
+
+        mItemViewModel = ViewModelProvider(this)[RecordsViewModel::class.java]
+
         setContent {
             TeesCurrencyConverterTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                navController = rememberNavController()
+
+                SetupAuthGraph(navController)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TeesCurrencyConverterTheme {
-        Greeting("Android")
     }
 }
