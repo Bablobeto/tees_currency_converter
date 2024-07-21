@@ -10,19 +10,19 @@
 - Room : https://www.youtube.com/watch?v=UBCAWfztTrQ&list=PLSrm9z4zp4mEPOfZNV9O-crOhoMa0G2-o&index=2
 
 ## Description
-The application is designed to develop a simple currency converter and show the implementation of firebase, retrofit2 and room libraries
+The application is designed to develop a simple currency converter and show the implementation of firebase, retrofit2 and room libraries, android modal
 
 ## Intended users
-Travelers Expats,  Online shoppers, Tour Operators and Travel Agencies and Accountants
+Travelers Expats, Online shoppers, Tour Operators and Travel Agencies and Accountants
 
 ## Unique screens
 Splash screen, Login, Register, Landing page (Currency Converter), Profile and avatar update
 
 ## Mobile device features
-Location, In-App notifications, Camera, Storage
+Camera, Storage
 
 ## Data persistence
-Using backend service (PHP API) and local storage caching (SQLite)
+Using public backend service (API) and local storage caching (SQLite)
 
 ## Data retrieval
 User input, HTTP Web API request, Local storage
@@ -35,7 +35,7 @@ User input, HTTP Web API request, Local storage
 Gps, notification, camera, storage permissions
 
 ## What tools will you use to deliver the application?
-Mac OS, Android Studio Koalla, Trello, Figma
+Mac OS, Android Studio Koala, Trello, Figma
 
 ## What agile methodology will you use?
 Kanban - Using visual approach to Agile.

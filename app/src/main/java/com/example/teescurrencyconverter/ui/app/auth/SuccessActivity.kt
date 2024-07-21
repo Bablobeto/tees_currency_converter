@@ -24,13 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.teescurrencyconverter.ui.app.components.Logo
+import com.example.teescurrencyconverter.ui.theme.Purple80
 import com.example.teescurrencyconverter.FbViewModel
 import com.example.teescurrencyconverter.R
-import com.example.teescurrencyconverter.ui.app.components.Logo
 import com.example.teescurrencyconverter.ui.app.navigations.Screen
-import com.example.teescurrencyconverter.ui.theme.Purple80
+import com.example.teescurrencyconverter.ui.app.navigations.Screen.Home.AUTHENTICATION_ROUTE
 import com.example.teescurrencyconverter.ui.theme.TeesCurrencyConverterTheme
 import kotlinx.coroutines.delay
 
@@ -44,7 +47,7 @@ fun SuccessActivity(
         navController.navigate(Screen.Registration.route)
     }
 
-    TeesCurrencyConverterTheme() {
+    TeesCurrencyConverterTheme {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,7 +67,8 @@ fun SuccessActivity(
                 }
 
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -73,7 +77,8 @@ fun SuccessActivity(
                     Image(
                         painter = painterResource(id = R.drawable.success_image),
                         contentDescription = stringResource(id = R.string.success_activity_image),
-                        modifier = Modifier.size(400.dp)
+                        modifier = Modifier
+                            .size(400.dp)
                             .clickable {
                                 navController.navigate(Screen.StageOne.route)
                             }
@@ -82,9 +87,10 @@ fun SuccessActivity(
                     Spacer(modifier = Modifier.height(25.dp))
 
                     Text(
-                        text = "Registration successful",
+                        text = "Welcome onboard!",
                         color = Purple80,
-                        fontWeight = FontWeight.ExtraBold
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = TextUnit(38f, TextUnitType.Sp),
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -98,16 +104,16 @@ fun SuccessActivity(
 
 @Composable
 fun CountdownTimer(navController: NavController) {
-    val count = remember { mutableIntStateOf(2) }
+    val count = remember { mutableIntStateOf(4) }
 
     LaunchedEffect(Unit) {
         while (count.intValue > 0) {
-            delay(1000)
+            delay(2000)
             count.intValue--
         }
 
         // Redirect to Home page screen
-        navController.navigate(Screen.StageOne.route)
+        navController.navigate(AUTHENTICATION_ROUTE)
     }
 
     Text(

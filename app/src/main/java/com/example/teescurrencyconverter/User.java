@@ -1,16 +1,13 @@
 package com.example.teescurrencyconverter;
 
 public class User {
-    public String firstName, lastName;
-    public Integer age;
+    public String name;
 
     public User(){
 
     }
 
-    public User(String firstName, String lastName, Integer age) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = (age != null) ? age : 0;
+    public User(String name) {
+        this.name = name;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.teescurrencyconverter.ui.app.auth
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,12 +36,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.teescurrencyconverter.ui.theme.TeesCurrencyConverterTheme
@@ -70,7 +75,6 @@ fun SignInActivity(
     // Display the registration response
     signedInResponse.let { response ->
         if(response){
-            Log.d("TAG Response", "logged in")
             navController.navigate(ROOT_ROUTE)
         }
     }
@@ -110,21 +114,28 @@ fun SignInActivity(
                         .fillMaxWidth()
                         .padding(20.dp, 0.dp, 20.dp, 30.dp)
                         .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.Bottom,
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+
+                    Image(
+                        painter = painterResource(id = R.drawable.signin),
+                        contentDescription = stringResource(id = R.string.success_activity_image),
+                        modifier = Modifier.size(380.dp)
+                    )
 
                     // Text
                     Text(
                         text = "Sign in",
                         fontWeight = FontWeight.Bold,
+                        fontSize = TextUnit(28f, TextUnitType.Sp),
                         color = Color.Black
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
 
                     Text(
-                        text = "Join the community of ambitious students building their dreams around healthy weight",
+                        text = "We are guaranteed platform to help you convert your currency to another one easily",
                         textAlign = TextAlign.Center,
                         color = Color.Black
                     )
@@ -179,7 +190,7 @@ fun SignInActivity(
                                         .clickable { passwordVisible = !passwordVisible }
                                         .padding(0.dp, 0.dp, 50.dp, 0.dp)
                                         .size(20.dp),
-                                    tint = Color.Blue
+                                    tint = Purple80
                                 )
                                 Icon(
                                     imageVector = Icons.Filled.Lock,
@@ -200,11 +211,11 @@ fun SignInActivity(
                         )
 
                         ElevatedButton(
-                            shape = RectangleShape,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(0.dp, 15.dp),
-                            colors = ButtonDefaults.buttonColors(Purple80),
+                                .padding(0.dp, 20.dp, 0.dp, 20.dp),
+                            shape = RoundedCornerShape(12.dp), // Use a rounded corner shape for a softer look
+                            colors = ButtonDefaults.buttonColors(containerColor = Purple80),
                             onClick = {
                                 if(emailError == null && passwordError == null)
                                 {
@@ -215,7 +226,9 @@ fun SignInActivity(
                             Text(
                                 text = "Sign in",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
+                                fontSize = TextUnit(18f, TextUnitType.Sp),
+                                modifier = Modifier.padding(15.dp)
                             )
                         }
 
@@ -228,11 +241,8 @@ fun SignInActivity(
                         modifier = Modifier.clickable {
                             navController.navigate(Screen.Registration.route)
                         },
-                        color = Color.Black
+                        color = Color.Black,
                     )
-
-                    // Sign up with Google
-                    SignInWithGoogle(navController, vm)
 
                 }
 
