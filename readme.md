@@ -1,7 +1,7 @@
 # TeesCurrencyConverter
 
 # Setup & Resources
-- Clone repository : git@github.com:Bablobeto/tees_currency_converter.git
+- Clone repository : git@github.com:philip553/tees_currency_converter.git
 - Figma : https://www.figma.com/design/gCRewWojXHrJEtIQiD2qzh/Mobile-App-Development?node-id=0-1&t=fvXdf3PqWklrSCEo-0
 - Trello : https://trello.com/b/KCjVGboc/mobile-app-development-teesside-ica
 - Exchange currency API : https://exchangeratesapi.io/documentation
