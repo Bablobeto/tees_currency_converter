@@ -301,6 +301,7 @@ fun HomeScreen(
                                 selectedCurrency = selectedSourceCurrency,
                                 onCurrencySelected = { newCurrency ->
                                     selectedSourceCurrency = newCurrency
+                                    convertedAmount = "0.00"
                                 }
                             )
                         }
@@ -376,6 +377,7 @@ fun HomeScreen(
                                             Log.d("Exchange",
                                                 "$selectedSourceCurrency to $selectedTargetCurrency = $convertedAmount"
                                             )
+
                                             recordsViewModel.addRecord(historyRecord)
                                         }
                                     }
