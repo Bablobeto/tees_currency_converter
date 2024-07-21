@@ -5,6 +5,7 @@ converterMoshi = "2.9.0"
 coreSplashscreen = "1.0.1"
 engageCore = "1.5.2"
 filamentAndroid = "1.17.1"
+firebaseAppcheckSafetynet = "16.1.2"
 firebaseAuth = "23.0.0"
 firebaseCrashlyticsBuildtools = "3.0.2"
 firebaseDatabase = "21.0.0"
@@ -58,6 +59,7 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 engage-core = { module = "com.google.android.engage:engage-core", version.ref = "engageCore" }
 filament-android = { module = "com.google.ar.sceneform:filament-android", version.ref = "filamentAndroid" }
+firebase-appcheck-safetynet = { module = "com.google.firebase:firebase-appcheck-safetynet", version.ref = "firebaseAppcheckSafetynet" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-crashlytics-buildtools = { module = "com.google.firebase:firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 firebase-database = { module = "com.google.firebase:firebase-database", version.ref = "firebaseDatabase" }

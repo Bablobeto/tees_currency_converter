@@ -220,6 +220,7 @@ fun SignInActivity(
                                 if(emailError == null && passwordError == null)
                                 {
                                     vm.signIn(email, password)
+                                    Log.d("SignInActivity - Signing in", "Email: $email, Password: $password")
                                 }
                             }
                         ) {

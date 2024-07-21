@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -106,9 +107,6 @@ fun HomeScreen(
     var showDialog by remember { mutableStateOf(false) }
     val auth = FirebaseAuth.getInstance()
     val uid = auth.currentUser?.uid ?: ""
-
-    var newWeight by remember { mutableIntStateOf(0) }
-    var newHeight by remember { mutableIntStateOf(0) }
 
     Log.d("values photo", auth.currentUser?.photoUrl.toString())
     Log.d("values", vm.isLogout.value.toString())
@@ -360,26 +358,31 @@ fun HomeScreen(
                                 },
                                 onValueChange = { newText ->
                                     amount = newText
-                                    Log.d("TAG", "Amount: $amount")
-                                    newText.toDoubleOrNull()?.let { amountDouble ->
-                                        // Trigger API call here if needed, using the 'historyRecord' object
-
-                                        val conversionRate = 1.1234 // Consider fetching this dynamically
-                                        val convertedAmount = amountDouble * conversionRate
-
-                                        val historyRecord = History(
-                                            Random.nextInt(), // Consider auto-generating IDs or using a more meaningful identifier
-                                            auth.currentUser?.uid.toString(),
-                                            selectedSourceCurrency,
-                                            selectedTargetCurrency,
-                                            conversionRate,
-                                            amountDouble,
-                                            convertedAmount
-                                        )
-
-                                        recordsViewModel.addRecord(historyRecord)
-                                    }
                                 },
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        val amountToSave = amount.toDoubleOrNull()
+                                        Log.d("TAG", amountToSave.toString())
+
+                                        // Now you can use 'amountToSave' to trigger API calls or other actions
+                                        amountToSave?.let { amountDouble ->
+                                            val conversionRate = 1.1234// Consider fetching this dynamically
+                                            val convertedAmount = amountDouble * conversionRate
+
+                                            val historyRecord = History(
+                                                Random.nextInt(),
+                                                auth.currentUser?.uid.toString(),
+                                                selectedSourceCurrency,
+                                                selectedTargetCurrency,
+                                                conversionRate,
+                                                amountDouble,
+                                                convertedAmount
+                                            )
+
+                                            recordsViewModel.addRecord(historyRecord)
+                                        }
+                                    }
+                                ),
                                 modifier = Modifier.fillMaxWidth()
                             )
 

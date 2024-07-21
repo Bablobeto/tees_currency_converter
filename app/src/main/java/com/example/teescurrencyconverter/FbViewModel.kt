@@ -3,8 +3,11 @@ package com.example.teescurrencyconverter
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
@@ -163,21 +166,30 @@ class FbViewModel @Inject constructor(
 
     fun signIn(email: String, pass: String) {
         inProgress.value = true
+        Log.d("SignInActivity - Attempt", "Attempting signing in with email: $email")
 
+        try{
         auth.signInWithEmailAndPassword(email, pass)
             .addOnCompleteListener{
                 if (it.isSuccessful) {
                     signedIn.value = true
                     isLogout.value = false
                     inProgress.value = false
-
+                    Log.d("SignInActivity - Success", "Good")
                     getCustomData()
                 }
                 else {
+                    Log.d("SignInActivity - Failed", it.exception.toString())
+
                     inProgress.value = false
                     handleException(it.exception, "Login failed")
                 }
             }
+
+        } catch (e: FirebaseNetworkException) {
+            // Handle network error, e.g., display an error message to the user
+            Log.e("SignInActivity - AuthError", "Network error during sign-in", e)
+        }
     }
 
     fun uploadBitmapToFirebase(name: String, bitmap: Bitmap) {

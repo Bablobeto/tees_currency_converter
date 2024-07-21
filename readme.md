@@ -2,12 +2,8 @@
 
 # Setup & Resources
 - Clone repository : git@github.com:Bablobeto/tees_currency_converter.git
-- Figma : https://www.figma.com/file/jHnMWtTac6TArwy57w4Dgg/UniFeeds?type=design&node-id=0-1&mode=design&t=tsXv6WmmDwJ5NaHb-0
-- Trello : https://trello.com/b/LbBIp1nn/ica
-- Backend API Service : (Retrofit) https://square.github.io/retrofit/
-- Firebase (Youtube) : https://www.youtube.com/watch?v=VjWd2Ri14ys&list=PL-Pm1lMui-3zr1rQ3mYsEhsBneH4-9p3M&index=13
-- Okhttp fix : https://stackoverflow.com/questions/51902629/how-to-allow-all-network-connection-types-http-and-https-in-android-9-pie
-- Room : https://www.youtube.com/watch?v=UBCAWfztTrQ&list=PLSrm9z4zp4mEPOfZNV9O-crOhoMa0G2-o&index=2
+- Figma : https://www.figma.com/design/gCRewWojXHrJEtIQiD2qzh/Mobile-App-Development?node-id=0-1&t=fvXdf3PqWklrSCEo-0
+- Trello : https://trello.com/b/KCjVGboc/mobile-app-development-teesside-ica
 
 ## Description
 The application is designed to develop a simple currency converter and show the implementation of firebase, retrofit2 and room libraries, android modal
