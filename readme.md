@@ -4,9 +4,10 @@
 - Clone repository : git@github.com:Bablobeto/tees_currency_converter.git
 - Figma : https://www.figma.com/design/gCRewWojXHrJEtIQiD2qzh/Mobile-App-Development?node-id=0-1&t=fvXdf3PqWklrSCEo-0
 - Trello : https://trello.com/b/KCjVGboc/mobile-app-development-teesside-ica
+- Exchange currency API : https://exchangeratesapi.io/documentation
 
 ## Description
-The application is designed to develop a simple currency converter and show the implementation of firebase, retrofit2 and room libraries, android modal
+The application is designed to develop a simple currency converter and show the implementation of firebase, retrofit2 and room libraries and android modal
 
 ## Intended users
 Travelers Expats, Online shoppers, Tour Operators and Travel Agencies and Accountants

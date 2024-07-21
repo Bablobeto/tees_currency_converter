@@ -80,7 +80,7 @@ fun SuccessActivity(
                         modifier = Modifier
                             .size(400.dp)
                             .clickable {
-                                navController.navigate(Screen.StageOne.route)
+                                navController.navigate(Screen.Home.route)
                             }
                     )
 

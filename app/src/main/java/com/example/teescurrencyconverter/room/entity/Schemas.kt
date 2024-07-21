@@ -12,7 +12,7 @@ data class History(
     val uid: String,
     val source: String,
     val target: String,
-    val rate: Double,
-    val amount: Double,
-    val result: Double
+    val rate: String,
+    val amount: String,
+    val result: String
 )

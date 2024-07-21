@@ -11,10 +11,6 @@ sealed class Screen (val route: String) {
     // Landings
     data object LandingPage : Screen(route = "LandingPageActivity")
 
-    //Onboarding ... Remove scope
-    data object StageOne : Screen(route = "StageOneActivity")
-    data object StageTwo : Screen(route = "StageTwoActivity")
-
     // Authentication
     data object SignIn : Screen(route = "SignInActivity")
     data object Registration : Screen(route = "RegistrationActivity")

@@ -1,14 +1,10 @@
 package com.example.teescurrencyconverter.ui.app.pages
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,13 +14,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,15 +27,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,8 +42,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,7 +49,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -74,6 +59,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.teescurrencyconverter.FbViewModel
@@ -85,21 +72,24 @@ import com.example.teescurrencyconverter.ui.app.navigations.Screen
 import com.example.teescurrencyconverter.ui.app.navigations.Screen.Home.AUTHENTICATION_ROUTE
 import com.example.teescurrencyconverter.ui.theme.Purple80
 import com.example.teescurrencyconverter.ui.theme.TeesCurrencyConverterTheme
-import com.google.common.math.IntMath.pow
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.random.Random
 
-@SuppressLint("CheckResult")
+@SuppressLint("CheckResult", "DefaultLocale")
 @Composable
 fun HomeScreen(
     navController : NavController,
     vm : FbViewModel,
     recordsViewModel: RecordsViewModel
 ){
-    var selectedSourceCurrency by remember { mutableStateOf("USD") }
+    var selectedSourceCurrency by remember { mutableStateOf("EUR") }
     var selectedTargetCurrency by remember { mutableStateOf("GBP") }
+    var convertedAmount by remember { mutableStateOf("0.00") }
+
     var amount by remember { mutableStateOf("") }
+    val retrofitModel: RetrofitViewModel = viewModel()
 
     vm.getCustomData()
 
@@ -315,7 +305,6 @@ fun HomeScreen(
                             )
                         }
 
-
                         Column(
                             modifier = Modifier
                                 .weight(1f)
@@ -358,27 +347,35 @@ fun HomeScreen(
                                 },
                                 onValueChange = { newText ->
                                     amount = newText
+
+                                    retrofitModel.viewModelScope.launch {
+                                        retrofitModel.fetchExchangeRates(selectedSourceCurrency, selectedTargetCurrency)
+                                    }
                                 },
                                 keyboardActions = KeyboardActions(
                                     onDone = {
-                                        val amountToSave = amount.toDoubleOrNull()
+
+                                        val amountToSave = amount.toDoubleOrNull() ?: 0.0
                                         Log.d("TAG", amountToSave.toString())
 
                                         // Now you can use 'amountToSave' to trigger API calls or other actions
-                                        amountToSave?.let { amountDouble ->
-                                            val conversionRate = 1.1234// Consider fetching this dynamically
-                                            val convertedAmount = amountDouble * conversionRate
+                                        amountToSave.let { amountDouble ->
+                                            val conversionRate = retrofitModel.targetExchangeRate.value ?: 0.0 // Handle potential null
+                                            convertedAmount = String.format("%.2f", conversionRate * amountDouble) // Format the result
 
                                             val historyRecord = History(
                                                 Random.nextInt(),
                                                 auth.currentUser?.uid.toString(),
                                                 selectedSourceCurrency,
                                                 selectedTargetCurrency,
-                                                conversionRate,
-                                                amountDouble,
+                                                conversionRate.toString(),
+                                                amountDouble.toString(),
                                                 convertedAmount
                                             )
 
+                                            Log.d("Exchange",
+                                                "$selectedSourceCurrency to $selectedTargetCurrency = $convertedAmount"
+                                            )
                                             recordsViewModel.addRecord(historyRecord)
                                         }
                                     }
@@ -397,7 +394,7 @@ fun HomeScreen(
 
                             // Output
                             Text(
-                                text = "1000000",
+                                text = convertedAmount,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 40.sp,
                                 color = Color.Black
@@ -481,7 +478,7 @@ fun CurrencyDropdown(
     label: String,
     selectedCurrency: String,
     onCurrencySelected: (String) -> Unit,
-    currencies: List<String> = listOf("NGN", "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "SEK", "NZD"), // Replace with your actual currency list
+    currencies: List<String> = listOf("EUR","USD","JPY","BGN","CZK","DKK","GBP","HUF","PLN","RON","SEK","CHF","ISK","NOK","HRK","RUB","TRY","AUD","BRL","CAD","CNY","HKD","IDR","ILS","INR","KRW","MXN","MYR","NZD","PHP","SGD","THB","ZAR"), // Replace with your actual currency list
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -719,58 +716,58 @@ fun ThreeByThreeTable(
     }
 }
 
-@Composable
-fun ScrollableNewsRow(viewModel: RetrofitViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    val data by viewModel.harryPotterData.observeAsState()
-    val news = data?.articles
-
-    Row(
-        modifier = Modifier
-            .horizontalScroll(rememberScrollState()),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        Icon(
-            imageVector = Icons.Filled.KeyboardArrowLeft,
-            contentDescription = "Scroll articles to the left",
-            modifier = Modifier
-                .size(80.dp)
-                .padding(0.dp, 0.dp, 40.dp, 0.dp)
-                .then(Modifier.offset((3).dp, 0.dp)),
-            tint = Purple80
-        )
-
-        val context = LocalContext.current
-        news?.forEach{
-
-            ElevatedCard (
-                modifier = Modifier
-                    .height(130.dp)
-                    .width(180.dp)
-                    .padding(0.dp, 0.dp, 10.dp)
-                    .clickable {
-                        val uri = Uri.parse(it.url)
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-
-                        context.startActivity(intent)
-                    }
-            ){
-
-                Text(
-                    text = it.title.take(26),
-                    modifier = Modifier.padding(10.dp)
-                )
-
-                Text(
-                    text = it.source.name,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(10.dp)
-                )
-            }
-
-        }
-    }
-}
+//@Composable
+//fun ScrollableNewsRow(viewModel: RetrofitViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+//    val data by viewModel.harryPotterData.observeAsState()
+//    val news = data?.articles
+//
+//    Row(
+//        modifier = Modifier
+//            .horizontalScroll(rememberScrollState()),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//
+//        Icon(
+//            imageVector = Icons.Filled.KeyboardArrowLeft,
+//            contentDescription = "Scroll articles to the left",
+//            modifier = Modifier
+//                .size(80.dp)
+//                .padding(0.dp, 0.dp, 40.dp, 0.dp)
+//                .then(Modifier.offset((3).dp, 0.dp)),
+//            tint = Purple80
+//        )
+//
+//        val context = LocalContext.current
+//        news?.forEach{
+//
+//            ElevatedCard (
+//                modifier = Modifier
+//                    .height(130.dp)
+//                    .width(180.dp)
+//                    .padding(0.dp, 0.dp, 10.dp)
+//                    .clickable {
+//                        val uri = Uri.parse(it.url)
+//                        val intent = Intent(Intent.ACTION_VIEW, uri)
+//
+//                        context.startActivity(intent)
+//                    }
+//            ){
+//
+//                Text(
+//                    text = it.title.take(26),
+//                    modifier = Modifier.padding(10.dp)
+//                )
+//
+//                Text(
+//                    text = it.source.name,
+//                    fontWeight = FontWeight.Bold,
+//                    modifier = Modifier.padding(10.dp)
+//                )
+//            }
+//
+//        }
+//    }
+//}
 
 //fun getBmi(item: History): Any{
 //    return item.weight / pow(item.height, 2)
