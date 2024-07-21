@@ -3,8 +3,11 @@ package com.example.teescurrencyconverter
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
@@ -27,7 +30,7 @@ class FbViewModel @Inject constructor(
     val popupNotification = mutableStateOf<Event<String>?>(null)
     var customData : User = User()
 
-    fun register(email: String, pass: String,firstName: String, lastName: String, age: Int) {
+    fun register(email: String, pass: String,name: String) {
         inProgress.value = true
 
         auth.createUserWithEmailAndPassword(email, pass)
@@ -37,10 +40,10 @@ class FbViewModel @Inject constructor(
                     uid = auth.currentUser?.uid.toString()
 
                     // Update profile
-                    updateProfile(firstName)
+                    updateProfile(name)
 
                     // Save extra profile data
-                    saveExtraProfileData(firstName, lastName, age, pass)
+                    saveExtraProfileData(name, pass)
                 }
                 else {
                     inProgress.value = false
@@ -49,12 +52,10 @@ class FbViewModel @Inject constructor(
             }
     }
 
-    fun saveExtraProfileData(firstName: String, lastName: String, age: Int, pass: String) {
+    fun saveExtraProfileData(name: String, pass: String) {
         // Save custom registration data
         val user = User(
-            firstName,
-            lastName,
-            age
+            name
         )
 
         FirebaseAuth
@@ -96,9 +97,9 @@ class FbViewModel @Inject constructor(
             }
     }
 
-   private fun updateProfile(firstName: String, uri : Uri ? = null){
+   private fun updateProfile(name: String, uri : Uri ? = null){
         val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName(firstName)
+            .setDisplayName(name)
             // You can also set photo URL if needed
             .setPhotoUri(uri)
             .build()
@@ -131,10 +132,8 @@ class FbViewModel @Inject constructor(
                                 // Save user custom data to model property
                                 customData = user
 
-                                val age = customData.age
-                                val firstName = user.firstName
-                                val lastName = user.lastName
-                                Log.d("TAG Custom data", "Age: $age, FirstName: $firstName, LastName: $lastName")
+                                val name = user.name
+                                Log.d("TAG Custom data", "Name: $name")
                             } else {
                                 Log.d("TAG Custom data", "User object for current user is null")
                             }
@@ -167,24 +166,33 @@ class FbViewModel @Inject constructor(
 
     fun signIn(email: String, pass: String) {
         inProgress.value = true
+        Log.d("SignInActivity - Attempt", "Attempting signing in with email: $email")
 
+        try{
         auth.signInWithEmailAndPassword(email, pass)
             .addOnCompleteListener{
                 if (it.isSuccessful) {
                     signedIn.value = true
                     isLogout.value = false
                     inProgress.value = false
-
+                    Log.d("SignInActivity - Success", "Good")
                     getCustomData()
                 }
                 else {
+                    Log.d("SignInActivity - Failed", it.exception.toString())
+
                     inProgress.value = false
                     handleException(it.exception, "Login failed")
                 }
             }
+
+        } catch (e: FirebaseNetworkException) {
+            // Handle network error, e.g., display an error message to the user
+            Log.e("SignInActivity - AuthError", "Network error during sign-in", e)
+        }
     }
 
-    fun uploadBitmapToFirebase(firstName: String, bitmap: Bitmap) {
+    fun uploadBitmapToFirebase(name: String, bitmap: Bitmap) {
         // Create a reference to the file you want to upload
         val imagesRef = FirebaseStorage
             .getInstance()
@@ -208,7 +216,7 @@ class FbViewModel @Inject constructor(
                 imagesRef.downloadUrl.addOnSuccessListener { uri ->
                     // Handle the download URL
                     Log.d("TAG", "Download URL: $uri")
-                    updateProfile(firstName, uri)
+                    updateProfile(name, uri)
                 }
             } else {
                 // Handle errors

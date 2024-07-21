@@ -35,9 +35,6 @@ fun SetupAuthGraph(
         // Landings graph
         landingsNavGraph(navController = navController, vm = vm, recordsViewModel)
 
-        // Onboarding graph
-        onboardingNavGraph(navController = navController, vm = vm)
-
         // Auth graph
         authNavGraph(navController = navController, vm = vm)
 

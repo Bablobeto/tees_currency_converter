@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -40,15 +42,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.teescurrencyconverter.ui.theme.TeesCurrencyConverterTheme
@@ -57,7 +61,9 @@ import com.example.teescurrencyconverter.R
 import com.example.teescurrencyconverter.ui.app.components.Logo
 import com.example.teescurrencyconverter.ui.app.components.SignInWithGoogle
 import com.example.teescurrencyconverter.ui.app.navigations.Screen
+import com.example.teescurrencyconverter.ui.app.navigations.Screen.Home.AUTHENTICATION_ROUTE
 import com.example.teescurrencyconverter.ui.app.navigations.Screen.Home.ONBOARDING_ROUTE
+import com.example.teescurrencyconverter.ui.app.navigations.Screen.Home.ROOT_ROUTE
 import com.example.teescurrencyconverter.ui.theme.Purple80
 
 @SuppressLint("InvalidColorHexValue")
@@ -69,9 +75,7 @@ fun RegistrationActivity(
     val formScrollState = rememberScrollState()
 
     // Form variables
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var age by remember { mutableIntStateOf(18) }
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -86,9 +90,9 @@ fun RegistrationActivity(
     // Display the registration response
     registrationResponse.let { response ->
         // Handle the registration response here
-        if(response){
+        if(response) {
             Log.d("TAG Response", "registered in")
-            navController.navigate(ONBOARDING_ROUTE)
+            navController.navigate(Screen.Success.route)
         }
     }
 
@@ -127,23 +131,29 @@ fun RegistrationActivity(
                     modifier = Modifier
                         .weight(2f)
                         .fillMaxWidth()
-                        .padding(20.dp, 15.dp, 20.dp, 0.dp)
+                        .padding(20.dp, 0.dp, 20.dp, 0.dp)
                         .verticalScroll(formScrollState) ,
-                    verticalArrangement = Arrangement.Bottom,
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.register),
+                        contentDescription = stringResource(id = R.string.success_activity_image),
+                        modifier = Modifier.size(320.dp)
+                    )
 
                     // Text
                     Text(
                         text = "Sign up",
                         fontWeight = FontWeight.Bold,
+                        fontSize = TextUnit(28f, TextUnitType.Sp),
                         color = Color.Black
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
 
                     Text(
-                        text = "Join the community of ambitious students building their dreams around healthy weight",
+                        text = "We are guaranteed platform to help you convert your currency to another one easily",
                         textAlign = TextAlign.Center,
                         color = Color.Black
                     )
@@ -157,10 +167,10 @@ fun RegistrationActivity(
                     ) {
 
                         OutlinedTextField(
-                            value = firstName,
-                            label = { Text("First name",
+                            value = name,
+                            label = { Text("Name",
                                 color = Color.Black) },
-                            placeholder = { Text("Ebenezer") },
+                            placeholder = { Text("Philip Shuaibu") },
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Text,
                                 imeAction = ImeAction.Next
@@ -168,51 +178,12 @@ fun RegistrationActivity(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Filled.AccountCircle,
-                                    contentDescription = "First name icon",
+                                    contentDescription = "Name icon",
                                     tint = Purple80
                                 )
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            onValueChange = { newText -> firstName = newText }
-                        )
-
-                        OutlinedTextField(
-                            value = lastName,
-                            label = { Text("Last name",
-                                color = Color.Black) },
-                            placeholder = { Text("Babalola") },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
-                                imeAction = ImeAction.Next
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.AccountCircle,
-                                    contentDescription = "Lastname icon",
-                                    tint = Purple80
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            onValueChange = { newText -> lastName = newText }
-                        )
-
-                        OutlinedTextField(
-                            value = age.toString(),
-                            label = { Text("Age",
-                                color = Color.Black) },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Next
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.Face,
-                                    contentDescription = "Age icon",
-                                    tint = Purple80
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            onValueChange = { newText -> age = newText.toIntOrNull() ?: 0}
+                            onValueChange = { newText -> name = newText }
                         )
 
                         OutlinedTextField(
@@ -264,12 +235,11 @@ fun RegistrationActivity(
                                     modifier = Modifier
                                         .clickable { passwordVisible = !passwordVisible }
                                         .size(20.dp),
-                                    tint = Color.Blue
+                                    tint = Purple80
                                 )
                             },
                             onValueChange = {
                                 newText -> password = newText
-                                // Perform password validation
                                 passwordError = if (password.length >= 6) null else "Password must be at least 6 characters"
                             },
                             modifier = Modifier.fillMaxWidth(),
@@ -278,22 +248,24 @@ fun RegistrationActivity(
                         )
 
                         ElevatedButton(
-                            shape = RectangleShape,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(0.dp, 15.dp),
-                            colors = ButtonDefaults.buttonColors(Purple80),
+                                .padding(0.dp, 20.dp, 0.dp, 20.dp),
+                            shape = RoundedCornerShape(12.dp), // Use a rounded corner shape for a softer look
+                            colors = ButtonDefaults.buttonColors(containerColor = Purple80),
                             onClick = {
                                 if(emailError == null && passwordError == null)
                                 {
-                                    vm.register(email, password, firstName, lastName, age)
+                                    vm.register(email, password, name)
                                 }
                             }
                         ) {
                             Text(
                                 text = "Register",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
+                                fontSize = TextUnit(18f, TextUnitType.Sp),
+                                modifier = Modifier.padding(15.dp)
                             )
                         }
 
@@ -308,9 +280,6 @@ fun RegistrationActivity(
                         },
                         color = Color.Black
                     )
-
-                    // Sign up with Google
-                    SignInWithGoogle(navController, vm)
 
                 }
 

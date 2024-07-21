@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teescurrencyconverter.room.ActivityListDatabase
-import com.example.teescurrencyconverter.room.entity.Records
+import com.example.teescurrencyconverter.room.entity.History
 import com.example.teescurrencyconverter.room.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ class RecordsViewModel(
     application: Application
 ): AndroidViewModel(application) {
 
-    var readAllData: Flow<List<Records>>
+    var readAllData: Flow<List<History>>
     private val repository: Repository
 
     init {
@@ -23,13 +23,13 @@ class RecordsViewModel(
         readAllData = repository.readAllRecords
     }
 
-    fun addRecord(record: Records){
+    fun addRecord(record: History){
         viewModelScope.launch(Dispatchers.IO) {
             repository.addRecord(record)
         }
     }
 
-    fun getAllRecords(uid : String) : Flow<List<Records>>{
+    fun getAllRecords(uid : String) : Flow<List<History>>{
         // Trigger the fetch of all items
         return repository.getRecords(uid)
     }

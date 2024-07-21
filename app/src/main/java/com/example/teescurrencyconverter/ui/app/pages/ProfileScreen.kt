@@ -24,13 +24,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -48,7 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -57,6 +56,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
@@ -66,6 +68,7 @@ import com.example.teescurrencyconverter.ui.app.navigations.Screen
 import com.example.teescurrencyconverter.ui.theme.Purple80
 import com.example.teescurrencyconverter.ui.theme.TeesCurrencyConverterTheme
 import com.google.firebase.auth.FirebaseAuth
+import java.util.Locale
 
 @Composable
 fun ProfileScreen(
@@ -77,9 +80,17 @@ fun ProfileScreen(
     val context = LocalContext.current
 
     // Form variables
-    var  firstName by remember { mutableStateOf(vm.customData.firstName ?: "") }
-    var  lastName by remember { mutableStateOf(vm.customData.lastName ?: "") }
-    var  age by remember { mutableStateOf(vm.customData.age ?: 18) }
+    var  name by remember { mutableStateOf(
+        if(null != auth.currentUser)
+            if(null != vm.customData.name) vm.customData.name.uppercase(
+                Locale.ROOT
+            )
+            else auth.currentUser!!.displayName.toString()
+                .uppercase(
+                    Locale.ROOT
+                )
+        else "Buddy")
+    }
     val  email by remember { mutableStateOf(user?.email ?: "") }
     var  password by remember { mutableStateOf("") }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -178,101 +189,31 @@ fun ProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        // Add profile image
-                        if(null != auth.currentUser?.photoUrl && bitmap == null){
-                            Image(
-                                painter = rememberImagePainter(auth.currentUser?.photoUrl.toString()),
-                                contentDescription = "Profile image",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .size(150.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = CircleShape
-                                    )
-                            )
-                        }
-                        else if (bitmap != null){
-                            Image(
-                                bitmap = bitmap?.asImageBitmap()!!,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .size(150.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = CircleShape
-                                    )
-                                    .clickable { showDialog = true }
-                            )
-                        }
-                        else {
-                            Image(
-                                painter = painterResource(id = R.drawable.baseline_person_24),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .size(150.dp)
-                                    .border(
-                                        width = 1.dp,
-                                        color = Color.Blue,
-                                        shape = CircleShape
-                                    )
-                                    .clickable { showDialog = true }
-                            )
-                        }
-                        // End add profile image
+                        Spacer(modifier = Modifier.height(40.dp))
 
-                      Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = "Profile",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            fontSize = TextUnit(30f, TextUnitType.Sp),
+                            modifier = Modifier.padding(15.dp)
+                        )
 
-//                        if(showDialog) {
-                            // Image upload options
-                            Row {
-                                Column {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.baseline_camera_24),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .clip(CircleShape)
-                                            .size(50.dp)
-                                            .clickable {
-                                                cLauncher.launch()
-                                                showDialog = false
-                                            }
-                                    )
-                                    Text(
-                                        text = "Camera",
-                                        color = Color.White
-                                    )
-                                }
-                                Column {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.baseline_browse_gallery_24),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .clip(CircleShape)
-                                            .size(50.dp)
-                                            .clickable {
-                                                launcher.launch("image/*")
-                                                showDialog = true
-                                            }
-                                    )
-                                }
-                            }
-
-//                      Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = "Provide the details below to update your profile information",
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.clickable {
+                                navController.navigate(Screen.Registration.route)
+                            },
+                            color = Color.Black,
+                        )
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         OutlinedTextField(
-                            value = firstName,
-                            label = { Text("First name") },
-                            placeholder = { Text("Ebenezer") },
+                            value = name,
+                            label = { Text("Name") },
+                            placeholder = { Text("Philip") },
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Text,
                                 imeAction = ImeAction.Next
@@ -285,50 +226,7 @@ fun ProfileScreen(
                                 )
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            onValueChange = { newText -> firstName = newText }
-                        )
-
-                        OutlinedTextField(
-                            value = lastName,
-                            label = { Text("Last name", color = Color.Black) },
-                            placeholder = { Text("Babalola") },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
-                                imeAction = ImeAction.Next
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.AccountCircle,
-                                    contentDescription = "Lastname icon",
-                                    tint = Purple80
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            onValueChange = { newText -> lastName = newText }
-                        )
-
-                        OutlinedTextField(
-                            value = age.toString(),
-                            label = { Text("Age", color = Color.Black) },
-                            placeholder = { Text("18") },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Next
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.Face,
-                                    contentDescription = "Age icon",
-                                    tint = Purple80
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            onValueChange = { newText ->
-                                val newAge = newText.toIntOrNull()
-                                if (newAge != null) {
-                                    age = newAge
-                                }
-                            }
+                            onValueChange = { newText -> name = newText }
                         )
 
                         OutlinedTextField(
@@ -370,25 +268,118 @@ fun ProfileScreen(
                             onValueChange = { newText -> password = newText }
                         )
 
+
+                      Spacer(modifier = Modifier.height(40.dp))
+
+                        // Add profile image
+                        if(null != auth.currentUser?.photoUrl && bitmap == null){
+                            Image(
+                                painter = rememberImagePainter(auth.currentUser?.photoUrl.toString()),
+                                contentDescription = "Profile image",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(Purple80)
+                                    .size(150.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        color = Purple80,
+                                        shape = CircleShape
+                                    )
+                            )
+                        }
+                        else if (bitmap != null){
+                            Image(
+                                bitmap = bitmap?.asImageBitmap()!!,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(Purple80)
+                                    .size(150.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        color = Purple80,
+                                        shape = CircleShape
+                                    )
+                                    .clickable { showDialog = true }
+                            )
+                        }
+                        else {
+                            Image(
+                                painter = painterResource(id = R.drawable.baseline_person_24),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(Purple80)
+                                    .size(150.dp)
+                                    .border(
+                                        width = 1.dp,
+                                        color = Purple80,
+                                        shape = CircleShape
+                                    )
+                                    .clickable { showDialog = true }
+                            )
+                        }
+                        // End add profile image
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+//                        if(showDialog) {
+                        // Image upload options
+                        Row {
+                            Column {
+                                Image(
+                                    painter = painterResource(id = R.drawable.baseline_camera_24),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(50.dp)
+                                        .clickable {
+                                            cLauncher.launch()
+                                            showDialog = false
+                                        }
+                                )
+                                Text(
+                                    text = "Camera",
+                                    color = Color.White
+                                )
+                            }
+                            Column {
+                                Image(
+                                    painter = painterResource(id = R.drawable.baseline_browse_gallery_24),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(50.dp)
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                            showDialog = true
+                                        }
+                                )
+                            }
+                        }
+
+
+
                         ElevatedButton(
-                            shape = RectangleShape,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(0.dp, 15.dp),
-                            colors = ButtonDefaults.buttonColors(Purple80),
+                                .padding(0.dp, 20.dp, 0.dp, 20.dp),
+                            shape = RoundedCornerShape(12.dp), // Use a rounded corner shape for a softer look
+                            colors = ButtonDefaults.buttonColors(containerColor = Purple80),
                             onClick = {
-                                Log.d("TAG password", password)
-                                vm.saveExtraProfileData(firstName, lastName, age, password)
-
+                                vm.saveExtraProfileData(name, password)
                                 bitmap?.let {
-                                    vm.uploadBitmapToFirebase(firstName, it)
+                                    vm.uploadBitmapToFirebase(name, it)
                                 }
-
                             }
                         ) {Text(
                             text = "Update changes",
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = Color.White,
+                            fontSize = TextUnit(18f, TextUnitType.Sp),
+                            modifier = Modifier.padding(15.dp)
                         )}
 
                     }

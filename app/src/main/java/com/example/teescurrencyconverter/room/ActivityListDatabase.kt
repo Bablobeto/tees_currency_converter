@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.teescurrencyconverter.room.entity.Records
+import com.example.teescurrencyconverter.room.entity.History
 
 @Database(
-    entities = [Records::class],
+    entities = [History::class],
     version = 1,
     exportSchema = false
 )
 abstract class ActivityListDatabase:RoomDatabase() {
-    public abstract fun recordsDao(): RecordsDao
+    public abstract fun recordsDao(): HistoryDao
 
     companion object {
         @Volatile
@@ -22,7 +22,7 @@ abstract class ActivityListDatabase:RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ActivityListDatabase::class.java,
-                    "activity_db"
+                    "history_db"
                 ).build()
                 INSTANCE = instance
                 return instance

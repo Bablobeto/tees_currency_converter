@@ -123,6 +123,8 @@ dependencies {
     // Google firebase
     implementation (libs.play.services.auth)
     implementation (libs.coil.compose)
+
+    implementation (libs.firebase.appcheck.safetynet)
 }
 
 // Allow references to generated code

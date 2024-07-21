@@ -4,13 +4,15 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "records")
-data class Records(
+@Entity(tableName = "history")
+data class History(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int,
     val uid: String,
-    val age: Int,
-    val weight: Int,
-    val height: Int
+    val source: String,
+    val target: String,
+    val rate: String,
+    val amount: String,
+    val result: String
 )
